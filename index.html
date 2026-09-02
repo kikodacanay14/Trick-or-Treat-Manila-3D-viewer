@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111210" />
+    <meta
+      name="description"
+      content="Explore the Trick or Treat Manila event floor plan in an interactive 3D viewer."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Trick or Treat Manila — Interactive 3D Floor Plan" />
+    <meta property="og:description" content="Explore the Trick or Treat Manila event floor plan from every angle." />
+    <meta property="og:image" content="https://kikodacanay14.github.io/Trick-or-Treat-Manila-3D-viewer/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Trick or Treat Manila — Interactive 3D Floor Plan" />
+    <meta name="twitter:description" content="Explore the Trick or Treat Manila event floor plan from every angle." />
+    <meta name="twitter:image" content="https://kikodacanay14.github.io/Trick-or-Treat-Manila-3D-viewer/og.png" />
+    <link rel="icon" href="blank-space-logo-white.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Trick or Treat Manila — Interactive 3D Floor Plan</title>
+    <script
+      type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"
+    ></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main class="site-shell">
+      <div class="atmosphere" aria-hidden="true"></div>
+
+      <header class="site-header">
+        <div class="brand-lockup">
+          <img class="brand-logo" src="blank-space-logo-white.png" alt="Blank Space Events" />
+          <span class="brand-divider" aria-hidden="true"></span>
+          <p class="project-name">Trick or Treat Manila</p>
+        </div>
+
+        <div class="proof-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          Review proof
+        </div>
+      </header>
+
+      <section class="viewer-section" aria-labelledby="viewer-title">
+        <div class="title-block">
+          <p class="section-kicker">Interactive 3D floor plan</p>
+          <h1 id="viewer-title">Explore the space.</h1>
+          <p class="intro-copy">
+            Move through the Trick or Treat Manila event layout and inspect the plan from every angle.
+          </p>
+        </div>
+
+        <div class="viewer-frame" id="viewer-frame">
+          <div class="viewer-grid" aria-hidden="true"></div>
+
+          <div class="viewer-chip">
+            <span class="live-dot" aria-hidden="true"></span>
+            3D model
+          </div>
+
+          <model-viewer
+            id="floor-plan-viewer"
+            src="assets/tot-manila-floor-plan.glb?v=1.0"
+            alt="Interactive 3D visualization of the Trick or Treat Manila event floor plan"
+            camera-controls
+            touch-action="pan-y"
+            interaction-prompt="auto"
+            shadow-intensity="0.7"
+            shadow-softness="0.9"
+            exposure="1.05"
+            environment-image="neutral"
+            camera-orbit="32deg 58deg auto"
+            field-of-view="30deg"
+            min-field-of-view="14deg"
+            max-field-of-view="52deg"
+            min-camera-orbit="auto 18deg auto"
+            max-camera-orbit="auto 86deg auto"
+          ></model-viewer>
+
+          <div class="loading-card" id="loading-card" role="status" aria-live="polite">
+            <div class="loading-ring" aria-hidden="true"></div>
+            <div class="loading-copy">
+              <span>Preparing the floor plan</span>
+              <strong id="loading-percent">0%</strong>
+            </div>
+            <div
+              class="progress-track"
+              role="progressbar"
+              aria-label="3D model loading progress"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              id="loading-progress"
+            >
+              <span id="loading-fill"></span>
+            </div>
+          </div>
+
+          <div class="error-card" id="error-card" role="alert" hidden>
+            <strong>The 3D model could not load.</strong>
+            <span>Please refresh the page and try again.</span>
+          </div>
+
+          <div class="viewer-controls" aria-label="3D viewer controls">
+            <button type="button" id="reset-view"><span aria-hidden="true">↺</span>Reset view</button>
+            <span class="control-divider" aria-hidden="true"></span>
+            <button type="button" id="fullscreen"><span aria-hidden="true">⛶</span><span id="fullscreen-label">Fullscreen</span></button>
+          </div>
+
+          <div class="gesture-hint" aria-hidden="true">
+            <span>Drag to rotate</span><i></i><span>Scroll to zoom</span><i></i><span>Right-drag to pan</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Review Proof — Interactive 3D Visualization</p>
+        <p>For spatial review only. Not a fabrication or structural drawing.</p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -21,7 +21,7 @@
     <title>Trick or Treat Manila — Interactive 3D Floor Plan</title>
     <script
       type="module"
-      src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"
+      src="vendor/model-viewer.min.js"
     ></script>
     <script type="module" src="app.js"></script>
   </head>
@@ -61,9 +61,10 @@
 
           <model-viewer
             id="floor-plan-viewer"
-            src="assets/tot-manila-floor-plan.glb?v=1.2"
+            src="assets/tot-manila-floor-plan.glb?v=1.3"
             alt="Interactive 3D visualization of the Trick or Treat Manila event floor plan"
             camera-controls
+            loading="eager"
             touch-action="pan-y"
             interaction-prompt="auto"
             shadow-intensity="0.7"

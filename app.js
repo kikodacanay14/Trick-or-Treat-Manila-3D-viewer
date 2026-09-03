@@ -13,23 +13,34 @@ const initialView = Object.freeze({
   fieldOfView: "30deg",
 });
 
+const finishLoading = () => {
+  loadingFill.style.width = "100%";
+  loadingPercent.textContent = "100%";
+  loadingProgress.setAttribute("aria-valuenow", "100");
+  loadingCard.hidden = true;
+};
+
+const showLoadError = () => {
+  loadingCard.hidden = true;
+  errorCard.hidden = false;
+};
+
 viewer.addEventListener("progress", ({ detail }) => {
   const percentage = Math.round((detail?.totalProgress ?? 0) * 100);
   loadingFill.style.width = `${percentage}%`;
   loadingPercent.textContent = `${percentage}%`;
   loadingProgress.setAttribute("aria-valuenow", String(percentage));
+  if (percentage === 100) {
+    loadingCard.querySelector(".loading-copy span").textContent = "Finalizing the 3D view";
+  }
 });
 
-viewer.addEventListener("load", () => {
-  loadingFill.style.width = "100%";
-  loadingPercent.textContent = "100%";
-  loadingProgress.setAttribute("aria-valuenow", "100");
-  loadingCard.hidden = true;
-});
+viewer.addEventListener("load", finishLoading);
 
-viewer.addEventListener("error", () => {
-  loadingCard.hidden = true;
-  errorCard.hidden = false;
+viewer.addEventListener("error", showLoadError);
+
+customElements.whenDefined("model-viewer").then(() => {
+  if (viewer.loaded) finishLoading();
 });
 
 document.querySelector("#reset-view").addEventListener("click", () => {

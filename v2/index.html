@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Interactive 3D render of the TELUS Trick or Treat Manila event layout.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../blank-space-logo-white.png">
+<style>html,body{margin:0}</style>
+<title>Trick or Treat Manila 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: full-bleed 3D stage under a slim title strip, with a floating viewpoint sidebar on the left */
+:root {
+  --bg: #f3efe9;          /* warm venue beige, like the Sarus partition walls */
+  --panel: #fffdf9;
+  --ink: #231a2c;
+  --muted: #6c6176;
+  --line: #e2d9cf;
+  --purple: #4b286d;      /* TELUS purple */
+  --green: #4f9a1f;       /* TELUS green, darkened for text on light */
+  --chip: #f1ebf6;
+  --scene: #efe9e1;
+  --shadow: rgba(30, 15, 45, 0.16);
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #17121c; --panel: #211a28; --ink: #f2ecf6; --muted: #b3a7bf; --line: #362c40;
+  --purple: #c7a6ea; --green: #8be04a; --chip: #2d2337; --scene: #1c1622; --shadow: rgba(0, 0, 0, 0.45); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #17121c; --panel: #211a28; --ink: #f2ecf6; --muted: #b3a7bf; --line: #362c40;
+  --purple: #c7a6ea; --green: #8be04a; --chip: #2d2337; --scene: #1c1622; --shadow: rgba(0, 0, 0, 0.45); color-scheme: dark }
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); display: flex; flex-direction: column; overflow: hidden; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px 10px; border-bottom: 1px solid var(--line); background: var(--panel); }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; text-wrap: balance; }
+h1 span { color: var(--purple); }
+.meta { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; }
+#stage { position: relative; flex: 1; min-height: 0; background: var(--scene); }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+#loading { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 0.9rem; }
+#loading strong { display: block; font-family: var(--font-display); font-size: 1.6rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hint { position: absolute; right: 16px; top: 12px; color: var(--muted); font-size: 0.75rem; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+aside { position: absolute; left: 16px; top: 16px; bottom: 16px; width: 264px; display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 30px var(--shadow); overflow: hidden; }
+aside .eyebrow { margin: 0; padding: 14px 16px 6px; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
+nav { display: flex; flex-direction: column; gap: 4px; padding: 0 8px 8px; overflow-y: auto; min-height: 0; }
+nav button { display: grid; grid-template-columns: 10px 1fr; column-gap: 10px; align-items: center; text-align: left; width: 100%;
+  font: 700 0.95rem var(--font-body); color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 10px;
+  padding: 9px 10px; cursor: pointer; }
+nav button i { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+nav button:hover { background: var(--chip); }
+nav button[aria-pressed="true"] { background: var(--purple); color: var(--panel); }
+nav button[aria-pressed="true"] i { background: var(--panel); }
+nav button:focus-visible { outline: 3px solid var(--green); outline-offset: 1px; }
+#caption { margin-top: auto; border-top: 1px solid var(--line); padding: 12px 16px 14px; }
+#caption h2 { margin: 0 0 4px; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; text-wrap: balance; }
+#caption p { margin: 0; color: var(--muted); font-size: 0.85rem; line-height: 1.45; }
+@media (max-width: 640px) {
+  .hint { display: none; }
+  aside { top: auto; bottom: 10px; left: 10px; right: 10px; width: auto; max-height: 46%; }
+  nav { flex-direction: row; overflow-x: auto; overflow-y: hidden; padding-bottom: 10px; }
+  nav button { width: auto; flex: 0 0 auto; }
+  #caption { order: -1; margin-top: 0; border-top: 0; border-bottom: 1px solid var(--line); padding: 10px 14px; }
+  aside .eyebrow { display: none; }
+}
+#toggle { position: absolute; left: 12px; top: 12px; z-index: 3; font: 700 0.85rem var(--font-body); color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; box-shadow: 0 4px 14px var(--shadow); }
+#toggle:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+aside { top: 56px; }
+@media (max-width: 640px) { aside { top: auto; } }
+</style>
+
+
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" aria-label="Interactive 3D model of the event venue"></canvas>
+  <div id="loading"><div><strong id="pct">0%</strong>Loading the venue model</div></div>
+  
+  <button id="toggle" type="button" aria-expanded="true" aria-controls="panel">Hide menu</button>
+  <aside id="panel" aria-label="Viewpoints">
+    <p class="eyebrow">Fly to</p>
+    <nav id="views"></nav>
+    <div id="caption"><h2 id="capTitle">Venue overview</h2><p id="capText">The full route from the escalator to the Sarus Ballroom. Pick a spot to fly there.</p></div>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.183.2/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+// Blender (Z up) to three.js (Y up)
+const B = (x, y, z) => new THREE.Vector3(x, z, -y);
+const VIEWS = [
+  { id: 'overview', name: 'Overview', pos: B(25, -42, 62), tgt: B(-19, 8, 0),
+    text: 'The full route from the escalator to the Sarus Ballroom. Pick a spot to fly there.' },
+  { id: 'registration', name: 'Registration', pos: B(-59.0, 21.0, 2.4), tgt: B(-50.6, 23.8, -0.2),
+    text: 'PhySec and bag check side by side by the escalator, then five stanchion lanes into 4 registration lanes plus assistance, and the snack pack table by the glass.' },
+  { id: 'mystic', name: 'Mystic Forest', pos: B(-26.0, 10.3, 1.6), tgt: B(-26.4, 4.7, 1.0),
+    text: 'Through the balloon arch on the grass carpet, with the Mystic Forest photowall facing the arch at the 2nd ballroom door.' },
+  { id: 'activity', name: 'Activity booths', pos: B(-24.0, 3.6, 1.9), tgt: B(-28.3, -2.0, 0.6),
+    text: 'Souvenir booth, fake tattoo booth with participant chairs, and the gelato cart along the glass wall.' },
+  { id: 'games', name: 'Game booths', pos: B(-2.1, 4.2, 3.0), tgt: B(-2.1, -6.0, 0.6),
+    text: 'Six game booths with their own backdrops and headers along the ballroom’s south wall.' },
+  { id: 'slide', name: 'Giant slide', pos: B(2.5, -1.5, 4.0), tgt: B(-5.5, 5.8, 1.2),
+    text: 'The capybara bounce house, with its slide facing the stage and the queue on the west side.' },
+  { id: 'stage', name: 'Stage', pos: B(-0.5, 5.9, 3.8), tgt: B(19.0, 5.9, 1.0),
+    text: 'A 2 ft stage shaped like a T: a deep middle section with slimmer side wings, the Whimsical Forest backdrop, rubber mats for kids and three rows of parent seating.' },
+];
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.AgXToneMapping;
+renderer.toneMappingExposure = 1.15;
+
+const scene = new THREE.Scene();
+const sceneBg = () => new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--scene').trim() || '#efe9e1');
+scene.background = sceneBg();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { scene.background = sceneBg(); });
+
+scene.add(new THREE.HemisphereLight(0xfff3e2, 0x4a3b2e, 1.6));
+const sun = new THREE.DirectionalLight(0xfff0dc, 1.6); sun.position.set(-30, 60, 40); scene.add(sun);
+const fill = new THREE.DirectionalLight(0xe8eefc, 0.6); fill.position.set(40, 30, -30); scene.add(fill);
+
+const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 600);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.maxPolarAngle = Math.PI * 0.495;
+camera.position.copy(VIEWS[0].pos); controls.target.copy(VIEWS[0].tgt);
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false);
+  camera.aspect = r.width / Math.max(r.height, 1);
+  // keep the focus point in the open area beside (or above) the floating sidebar
+  const asideEl = document.querySelector('aside'); const side = asideEl.hidden ? { width: -16, height: -10 } : asideEl.getBoundingClientRect();
+  if (r.width > 640) camera.setViewOffset(r.width + side.width + 16, r.height, 0, 0, r.width, r.height);
+  else camera.setViewOffset(r.width, r.height + side.height + 10, 0, 0, r.width, r.height);
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(canvas.parentElement); resize();
+const toggle = document.getElementById('toggle'), panel = document.getElementById('panel');
+toggle.addEventListener('click', () => { panel.hidden = !panel.hidden; toggle.setAttribute('aria-expanded', String(!panel.hidden)); toggle.textContent = panel.hidden ? 'Show menu' : 'Hide menu'; resize(); });
+
+const draco = new DRACOLoader();
+draco.setDecoderPath('draco/');
+const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+const pct = document.getElementById('pct');
+function onModel(g) {
+  g.scene.traverse((o) => {
+    if (o.isMesh && o.material) {
+      const m = o.material;
+      if (m.transparent && m.opacity < 0.5) { m.depthWrite = false; o.renderOrder = 2; }
+    }
+  });
+  scene.add(g.scene);
+  document.getElementById('loading').hidden = true;
+}
+function onFail() {
+  document.getElementById('loading').innerHTML = '<div><strong>Couldn’t load the model</strong>Refresh the page to try again.</div>';
+}
+loader.load('tot-manila-v2.glb', onModel, (e) => {
+  if (e.total) pct.textContent = Math.round((e.loaded / e.total) * 100) + '%';
+}, onFail);
+
+// viewpoint rail
+const nav = document.getElementById('views');
+const capTitle = document.getElementById('capTitle'), capText = document.getElementById('capText');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let tween = null;
+function go(v) {
+  nav.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === v.id)));
+  capTitle.textContent = v.id === 'overview' ? 'Venue overview' : v.name; capText.textContent = v.text;
+  if (reduce) { camera.position.copy(v.pos); controls.target.copy(v.tgt); return; }
+  tween = { t0: performance.now(), dur: 1400, p0: camera.position.clone(), q0: controls.target.clone(), p1: v.pos, q1: v.tgt };
+}
+VIEWS.forEach((v, i) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.id = 'view-' + v.id; b.dataset.id = v.id; b.setAttribute('aria-pressed', String(i === 0));
+  b.innerHTML = '<i></i>' + v.name; b.addEventListener('click', () => go(v)); nav.appendChild(b);
+});
+controls.addEventListener('start', () => { tween = null; });
+if (location.hash) { const v = VIEWS.find((x) => '#' + x.id === location.hash); if (v) go(v); }
+
+const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+renderer.setAnimationLoop((now) => {
+  if (tween) {
+    const k = Math.min(1, (now - tween.t0) / tween.dur), e = ease(k);
+    camera.position.lerpVectors(tween.p0, tween.p1, e); controls.target.lerpVectors(tween.q0, tween.q1, e);
+    if (k >= 1) tween = null;
+  }
+  controls.update(); renderer.render(scene, camera);
+});
+</script>
+
+</body>
+</html>

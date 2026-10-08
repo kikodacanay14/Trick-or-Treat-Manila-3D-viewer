@@ -174,7 +174,7 @@ function onModel(g) {
 function onFail() {
   document.getElementById('loading').innerHTML = '<div><strong>Couldn’t load the model</strong>Refresh the page to try again.</div>';
 }
-loader.load('tot-manila-v2.glb', onModel, (e) => {
+loader.load('tot-manila-v2.glb?v=2', onModel, (e) => {
   if (e.total) pct.textContent = Math.round((e.loaded / e.total) * 100) + '%';
 }, onFail);
 

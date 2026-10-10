@@ -114,8 +114,8 @@ const VIEWS = [
     text: 'Through the balloon arch on the grass carpet, with the Mystic Forest photowall facing the arch at the 2nd ballroom door.' },
   { id: 'activity', name: 'Activity booths', pos: B(-24.0, 4.1, 2.0), tgt: B(-28.4, -0.6, 0.6),
     text: 'Souvenir booth, fake tattoo booth with participant chairs, and the gelato cart along the glass wall.' },
-  { id: 'games', name: 'Game booths', pos: B(-2.1, 4.2, 3.0), tgt: B(-2.1, -6.0, 0.6),
-    text: 'Six game setups along the ballroom’s south wall.' },
+  { id: 'games', name: 'Game booths', pos: B(-12.0, 3.0, 3.0), tgt: B(-12.0, -6.0, 0.6),
+    text: 'Six game setups in the ballroom’s south-west corner, clear of the open doors.' },
   { id: 'slide', name: 'Giant slide', pos: B(2.5, -1.5, 4.0), tgt: B(-5.5, 5.8, 1.2),
     text: 'The capybara bounce house, with its slide facing the stage and open space all around it.' },
   { id: 'stage', name: 'Stage', pos: B(-0.5, 5.9, 3.8), tgt: B(19.0, 5.9, 1.0),
@@ -174,7 +174,7 @@ function onModel(g) {
 function onFail() {
   document.getElementById('loading').innerHTML = '<div><strong>Couldn’t load the model</strong>Refresh the page to try again.</div>';
 }
-loader.load('tot-manila-v2.glb?v=4', onModel, (e) => {
+loader.load('tot-manila-v2.glb?v=5', onModel, (e) => {
   if (e.total) pct.textContent = Math.round((e.loaded / e.total) * 100) + '%';
 }, onFail);
 

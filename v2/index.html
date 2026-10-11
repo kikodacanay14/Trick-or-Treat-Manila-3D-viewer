@@ -109,9 +109,9 @@ const VIEWS = [
   { id: 'overview', name: 'Overview', pos: B(25, -42, 62), tgt: B(-19, 8, 0),
     text: 'The full route from the escalator to the Sarus Ballroom. Pick a spot to fly there.' },
   { id: 'registration', name: 'Registration', pos: B(-59.0, 21.0, 2.4), tgt: B(-50.6, 23.8, -0.2),
-    text: 'PhySec and bag check side by side by the escalator, then five stanchion lanes into 4 registration lanes plus assistance, and the snack pack table by the glass.' },
+    text: 'PhySec and bag check side by side by the escalator, then five stanchion lanes into 4 registration lanes plus assistance, and a line of 6 snack pack tables beside it, ending with the balloon pillars.' },
   { id: 'mystic', name: 'Mystic Forest', pos: B(-26.0, 10.3, 1.6), tgt: B(-26.4, 4.7, 1.0),
-    text: 'Through the balloon arch on the grass carpet, with the Mystic Forest photowall facing the arch at the 2nd ballroom door.' },
+    text: 'Under the balloon arch at the corridor corner, along the grass carpet to the main entrance (2nd door), with the Mystic Forest photowall facing the arch.' },
   { id: 'activity', name: 'Activity booths', pos: B(-24.0, 4.1, 2.0), tgt: B(-28.4, -0.6, 0.6),
     text: 'Souvenir booth, fake tattoo booth with participant chairs, and the gelato cart along the glass wall.' },
   { id: 'games', name: 'Game booths', pos: B(-12.0, 3.0, 3.0), tgt: B(-12.0, -6.0, 0.6),
@@ -174,7 +174,7 @@ function onModel(g) {
 function onFail() {
   document.getElementById('loading').innerHTML = '<div><strong>Couldn’t load the model</strong>Refresh the page to try again.</div>';
 }
-loader.load('tot-manila-v2.glb?v=5', onModel, (e) => {
+loader.load('tot-manila-v2.glb?v=6', onModel, (e) => {
   if (e.total) pct.textContent = Math.round((e.loaded / e.total) * 100) + '%';
 }, onFail);
 

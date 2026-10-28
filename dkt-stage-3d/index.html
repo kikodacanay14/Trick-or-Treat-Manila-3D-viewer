@@ -11,17 +11,17 @@ html,body{margin:0}
 /* Layout: one stage drawing in a framed viewport, view switch above it, gear key beside (stacks on phones). */
 :root{
   --bg:#F3F5F9; --panel:#FFFFFF; --ink:#0B1A33; --muted:#56617A; --line:#D6DCE7;
-  --navy:#0B2A5B; --red:#E2231A; --switch-bg:#E4E9F2; --stage-bg:#3A3936;
+  --navy:#0B2A5B; --red:#E2231A; --switch-bg:#E4E9F2; --stage-bg:#3A3936; --lights:#C77700; --audio:#0E8FA8;
   --f-display:"Barlow Condensed","Arial Narrow",sans-serif;
   --f-body:"IBM Plex Sans",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#081228; --panel:#0F1D3A; --ink:#E9EEF8; --muted:#9AA6C0; --line:#22345A;
-  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; color-scheme:dark}}
+  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; --lights:#FFB43D; --audio:#3FD0EA; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#081228; --panel:#0F1D3A; --ink:#E9EEF8; --muted:#9AA6C0; --line:#22345A;
-  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; color-scheme:dark}
+  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; --lights:#FFB43D; --audio:#3FD0EA; color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 40px}
 .wrap{max-width:1320px;margin:0 auto;display:grid;gap:20px}
@@ -49,7 +49,18 @@ dt{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:500;c
 dd{margin:0;min-width:0}
 dd small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
 .sub{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;border-top:1px solid var(--line);padding-top:12px}
-.sub:first-of-type{border-top:0;padding-top:0;margin-top:0}
+section:first-of-type .sub{border-top:0;padding-top:0;margin-top:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.switch.focus .thumb{background:var(--navy)}
+:root[data-focus="lights"] .switch.focus .thumb{background:var(--lights)}
+:root[data-focus="audio"] .switch.focus .thumb{background:var(--audio)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.dot-lights{background:var(--lights)} .dot-audio{background:var(--audio)}
+.total{display:none;font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin:-4px 0 14px}
+aside[data-focus="lights"] [data-group]:not([data-group="lights"]),aside[data-focus="audio"] [data-group]:not([data-group="audio"]){display:none}
+aside[data-focus="lights"] [data-only="lights"],aside[data-focus="audio"] [data-only="audio"]{display:block}
+aside[data-focus] section .sub{border-top:0;padding-top:0;margin-top:0}
+aside[data-focus="lights"] dt{color:var(--lights)} aside[data-focus="audio"] dt{color:var(--audio)}
 @media (prefers-reduced-motion:reduce){.thumb,.switch button{transition:none}}
 </style>
 </head>
@@ -61,12 +72,20 @@ dd small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
       <p class="eyebrow">DKT 2027 Kick-Off · Stage</p>
       <h1>Go Beyond! stage in 3D</h1>
     </div>
-    <div class="switch" role="group" aria-label="Choose view">
+    <div class="controls">
+    <div class="switch focus" role="group" aria-label="Highlight equipment">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" id="fx-all" data-focus="all" aria-pressed="true">All</button>
+      <button type="button" id="fx-lights" data-focus="lights" aria-pressed="false">Lights</button>
+      <button type="button" id="fx-audio" data-focus="audio" aria-pressed="false">Audio</button>
+    </div>
+    <div class="switch views" role="group" aria-label="Choose view">
       <span class="thumb" aria-hidden="true"></span>
       <button type="button" id="btn-front" data-view="front" aria-pressed="true">Front</button>
       <button type="button" id="btn-top" data-view="top" aria-pressed="false">Top</button>
       <button type="button" id="btn-side" data-view="side" aria-pressed="false">Side</button>
       <button type="button" id="btn-free" data-view="free" aria-pressed="false">3D</button>
+    </div>
     </div>
   </header>
 
@@ -77,28 +96,36 @@ dd small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
         <span class="tag" id="tag">FRONT</span>
         <span class="loading" id="loading">Loading 3D model…</span>
       </div>
-      <p class="hint">Drag to rotate, right-drag or two fingers to pan, scroll or pinch to zoom. Keys 1 to 4 switch views.</p>
+      <p class="hint">Drag to rotate, right-drag or two fingers to pan, scroll or pinch to zoom. Keys 1 to 4 switch views. L, A and 0 highlight lights, audio or everything.</p>
     </div>
 
     <aside>
-      <h2>Stage and gear</h2>
-      <p class="sub">Lights</p>
-      <dl>
-        <dt>6</dt><dd>LED strobe panels<small>Hung under the top truss, behind the LED wall</small></dd>
-        <dt>4</dt><dd>Moving heads<small>On the top truss, between the strobes</small></dd>
-        <dt>6</dt><dd>Beam moving heads<small>Row on the deck, in front of the LED wall and wings</small></dd>
-      </dl>
-      <p class="sub">Audio</p>
-      <dl>
-        <dt>2</dt><dd>Wedge monitors<small>Stage front, facing the presenter</small></dd>
-        <dt>4</dt><dd>Surround speakers on tripods<small>2 front, 2 back, both sides of the room</small></dd>
-      </dl>
-      <p class="sub">Stage</p>
-      <dl>
-        <dt>&nbsp;</dt><dd>Deck 17.1 × 4.9 m, 0.6 m (2 ft) high</dd>
-        <dt>&nbsp;</dt><dd>Center LED 6 × 4 m, wings 3 m wide with angled tops</dd>
-        <dt>&nbsp;</dt><dd>Truss 16 m span at the back of the stage, bottom at 5.5 m</dd>
-      </dl>
+      <h2 id="aside-title">Stage and gear</h2>
+      <section data-group="lights">
+        <p class="sub"><span class="dot dot-lights" aria-hidden="true"></span>Lights</p>
+        <dl>
+          <dt>6</dt><dd>LED strobe panels<small>Hung under the top truss, behind the LED wall at the back of the stage, about 5.3 m up, above the LED wall</small></dd>
+          <dt>4</dt><dd>Moving heads<small>On the same truss, between the strobes</small></dd>
+          <dt>6</dt><dd>Beam moving heads<small>One row on the deck, in front of the LED wall and wings, 3 m apart</small></dd>
+        </dl>
+        <p class="total" data-only="lights">16 fixtures in total</p>
+      </section>
+      <section data-group="audio">
+        <p class="sub"><span class="dot dot-audio" aria-hidden="true"></span>Audio</p>
+        <dl>
+          <dt>2</dt><dd>Wedge monitors<small>At the stage front, angled up toward the presenter</small></dd>
+          <dt>4</dt><dd>Surround speakers on tripods<small>2 near the stage and 2 at the back, on both sides of the room, about 2.3 m high and aimed at the audience</small></dd>
+        </dl>
+        <p class="total" data-only="audio">6 speakers in total</p>
+      </section>
+      <section data-group="stage">
+        <p class="sub">Stage</p>
+        <dl>
+          <dt>&nbsp;</dt><dd>Deck 17.1 × 4.9 m, 0.6 m (2 ft) high</dd>
+          <dt>&nbsp;</dt><dd>Center LED 6 × 4 m, wings 3 m wide with angled tops</dd>
+          <dt>&nbsp;</dt><dd>Truss 16 m span at the back of the stage, bottom at 5.5 m</dd>
+        </dl>
+      </section>
     </aside>
   </div>
 </div>
@@ -154,9 +181,9 @@ function go(v, instant){
 
 // UI: switch
 const views=['front','top','side','free'];
-const btns=[...document.querySelectorAll('.switch button')], thumb=document.querySelector('.thumb'), tag=document.getElementById('tag');
+const btns=[...document.querySelectorAll('.switch.views button')], thumb=document.querySelector('.switch.views .thumb'), tag=document.getElementById('tag');
 let cur='front';
-function place(){const b=document.getElementById('btn-'+cur);thumb.style.left=b.offsetLeft+'px';thumb.style.width=b.offsetWidth+'px';}
+function place(){const b=document.getElementById('btn-'+cur);thumb.style.left=b.offsetLeft+'px';thumb.style.width=b.offsetWidth+'px';placeFocus();}
 function show(v, push, instant){
   if(!VIEWS[v]) v='front'; cur=v;
   btns.forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.view===v)));
@@ -166,7 +193,44 @@ function show(v, push, instant){
 btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.view,true)));
 document.addEventListener('keydown',e=>{
   if(e.key>='1'&&e.key<='4') show(views[+e.key-1],true);
+  const k=e.key.toLowerCase();
+  if(k==='l') setFocus('lights'); else if(k==='a') setFocus('audio'); else if(k==='0') setFocus('all');
 });
+
+// Equipment focus: highlight one group, fade the rest, show only that group's text.
+const GROUPS={lights:/^AV_(Strobe|MovingHead|Beam)/, audio:/^AV_(Wedge|Surround)/};
+const GLOW={lights:new THREE.Color(0xffa52e), audio:new THREE.Color(0x2fd3ee)};
+const fBtns=[...document.querySelectorAll('.switch.focus button')], fThumb=document.querySelector('.switch.focus .thumb');
+const aside=document.querySelector('aside'), asideTitle=document.getElementById('aside-title');
+let focus='all', parts=[], beamMeshes=[];
+const ghost=new THREE.MeshStandardMaterial({color:0x8a8f99, transparent:true, opacity:0.16, depthWrite:false, roughness:1});
+function groupOf(o){ for(let n=o;n;n=n.parent){ for(const g in GROUPS) if(GROUPS[g].test(n.name||'')) return g; } return null; }
+function placeFocus(){const b=document.getElementById('fx-'+focus);fThumb.style.left=b.offsetLeft+'px';fThumb.style.width=b.offsetWidth+'px';}
+function setFocus(f){
+  focus=GROUPS[f]?f:'all';
+  fBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.focus===focus)));
+  if(focus==='all'){ aside.removeAttribute('data-focus'); delete document.documentElement.dataset.focus; asideTitle.textContent='Stage and gear'; }
+  else { aside.dataset.focus=focus; document.documentElement.dataset.focus=focus; asideTitle.textContent=focus==='lights'?'Lighting':'Audio'; }
+  parts.forEach(p=>{
+    if(focus==='all') p.mesh.material=p.orig;
+    else if(p.group===focus) p.mesh.material=p.hi[focus];
+    else p.mesh.material=ghost;
+  });
+  beamMeshes.forEach(m=>{ m.visible = focus!=='audio'; });
+  placeFocus();
+}
+fBtns.forEach(b=>b.addEventListener('click',()=>setFocus(b.dataset.focus)));
+function prepParts(root){
+  root.traverse(o=>{
+    if(!o.isMesh) return;
+    const g=groupOf(o), orig=o.material, hi={};
+    for(const k in GROUPS){
+      const m=orig.clone(); m.emissive=GLOW[k].clone(); m.emissiveIntensity=k===g?0.9:0; m.emissiveMap=null; m.userData.pulse=k===g; hi[k]=m;
+    }
+    if(/Lens/.test(o.name)) for(const k in hi){ hi[k].emissive=new THREE.Color(0xffffff); hi[k].emissiveIntensity=3; hi[k].userData.pulse=false; }
+    parts.push({mesh:o, group:g, orig, hi});
+  });
+}
 window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));
 controls.addEventListener('start',()=>{ anim=null; if(cur!=='free'){ cur='free'; btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view==='free'))); tag.textContent=VIEWS.free.label; place(); }});
 
@@ -185,13 +249,15 @@ new GLTFLoader().load(GLB_URL, gltf=>{
     if(m.emissiveMap){ m.emissiveIntensity = 1.1; }
     if(/Lens/.test(m.name)) m.emissiveIntensity = 3;
   });
+  prepParts(gltf.scene);
   scene.add(gltf.scene);
   const beamMat = new THREE.MeshBasicMaterial({color:0xbfd4ff, transparent:true, opacity:0.18, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide});
   BEAMS.forEach(b=>{
     const g = new THREE.CylinderGeometry(0.16, 0.04, b.len, 20, 1, true);
-    const m = new THREE.Mesh(g, beamMat); m.position.copy(B(b.x,b.y,b.z)); m.rotation.z = -b.tilt; scene.add(m);
+    const m = new THREE.Mesh(g, beamMat); m.position.copy(B(b.x,b.y,b.z)); m.rotation.z = -b.tilt; scene.add(m); beamMeshes.push(m);
   });
   document.getElementById('loading').remove();
+  setFocus(focus);
 }, undefined, err=>{ document.getElementById('loading').textContent='The 3D model could not load. Reload the page to try again.'; console.error(err); });
 
 show(location.hash.slice(1)||'front', false, true);
@@ -204,6 +270,8 @@ show(location.hash.slice(1)||'front', false, true);
     camera.fov = anim.from.fov + (anim.to.fov-anim.from.fov)*e; camera.updateProjectionMatrix();
     if(k>=1) anim=null;
   }
+  if(focus!=='all'){ const k=matchMedia('(prefers-reduced-motion: reduce)').matches?0.9:0.65+0.35*Math.sin(now/260);
+    parts.forEach(p=>{ if(p.group===focus && p.hi[focus].userData.pulse) p.hi[focus].emissiveIntensity=k; }); }
   controls.update(); renderer.render(scene, camera);
 })(performance.now());
 </script>

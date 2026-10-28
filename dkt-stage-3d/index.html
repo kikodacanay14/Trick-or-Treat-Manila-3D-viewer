@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DKT Kick-Off Stage Views</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+html,body{margin:0}
+
+/* Layout: one stage drawing in a framed viewport, view switch above it, gear key beside (stacks on phones). */
+:root{
+  --bg:#F3F5F9; --panel:#FFFFFF; --ink:#0B1A33; --muted:#56617A; --line:#D6DCE7;
+  --navy:#0B2A5B; --red:#E2231A; --switch-bg:#E4E9F2; --stage-bg:#3A3936;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#081228; --panel:#0F1D3A; --ink:#E9EEF8; --muted:#9AA6C0; --line:#22345A;
+  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#081228; --panel:#0F1D3A; --ink:#E9EEF8; --muted:#9AA6C0; --line:#22345A;
+  --navy:#9DB8F0; --red:#FF4B3F; --switch-bg:#16264A; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 40px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin:0}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,4.5vw,48px);line-height:1;margin:4px 0 0;color:var(--navy);text-wrap:balance}
+.switch{display:inline-flex;background:var(--switch-bg);border-radius:999px;padding:4px;gap:2px;position:relative}
+.switch button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 15px/1 var(--f-body);
+  padding:11px 22px;border-radius:999px;cursor:pointer;position:relative;z-index:1;transition:color .2s}
+.switch button[aria-pressed="true"]{color:#fff}
+.switch button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.thumb{position:absolute;top:4px;bottom:4px;border-radius:999px;background:var(--red);transition:left .25s ease,width .25s ease;z-index:0}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+.viewport{position:relative;aspect-ratio:16/9;max-width:100%;background:var(--stage-bg);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.viewport canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.viewport canvas:active{cursor:grabbing}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-family:var(--f-mono);font-size:13px;letter-spacing:.06em}
+.tag{position:absolute;left:12px;top:12px;font-family:var(--f-mono);font-size:12px;color:#fff;background:rgba(0,0,0,.55);padding:5px 9px;border-radius:6px;letter-spacing:.04em}
+.hint{font-size:13px;color:var(--muted);margin:8px 2px 0}
+aside{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 8px;min-width:0}
+aside h2{font-family:var(--f-display);font-size:22px;font-weight:600;margin:0 0 10px;color:var(--navy);letter-spacing:.01em}
+dl{margin:0 0 14px;display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:8px}
+dt{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:500;color:var(--red);min-width:2ch;text-align:right}
+dd{margin:0;min-width:0}
+dd small{display:block;color:var(--muted);font-size:12.5px;line-height:1.35}
+.sub{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;border-top:1px solid var(--line);padding-top:12px}
+.sub:first-of-type{border-top:0;padding-top:0;margin-top:0}
+@media (prefers-reduced-motion:reduce){.thumb,.switch button{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">DKT 2027 Kick-Off · Stage</p>
+      <h1>Go Beyond! stage in 3D</h1>
+    </div>
+    <div class="switch" role="group" aria-label="Choose view">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" id="btn-front" data-view="front" aria-pressed="true">Front</button>
+      <button type="button" id="btn-top" data-view="top" aria-pressed="false">Top</button>
+      <button type="button" id="btn-side" data-view="side" aria-pressed="false">Side</button>
+      <button type="button" id="btn-free" data-view="free" aria-pressed="false">3D</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div>
+      <div class="viewport" id="vp">
+        <canvas id="c" aria-label="3D model of the stage. Drag to rotate, scroll or pinch to zoom."></canvas>
+        <span class="tag" id="tag">FRONT</span>
+        <span class="loading" id="loading">Loading 3D model…</span>
+      </div>
+      <p class="hint">Drag to rotate, right-drag or two fingers to pan, scroll or pinch to zoom. Keys 1 to 4 switch views.</p>
+    </div>
+
+    <aside>
+      <h2>Stage and gear</h2>
+      <p class="sub">Lights</p>
+      <dl>
+        <dt>6</dt><dd>LED strobe panels<small>Hung under the top truss, behind the LED wall</small></dd>
+        <dt>4</dt><dd>Moving heads<small>On the top truss, between the strobes</small></dd>
+        <dt>6</dt><dd>Beam moving heads<small>Row on the deck, in front of the LED wall and wings</small></dd>
+      </dl>
+      <p class="sub">Audio</p>
+      <dl>
+        <dt>2</dt><dd>Wedge monitors<small>Stage front, facing the presenter</small></dd>
+        <dt>4</dt><dd>Surround speakers on tripods<small>2 front, 2 back, both sides of the room</small></dd>
+      </dl>
+      <p class="sub">Stage</p>
+      <dl>
+        <dt>&nbsp;</dt><dd>Deck 17.1 × 4.9 m, 0.6 m (2 ft) high</dd>
+        <dt>&nbsp;</dt><dd>Center LED 6 × 4 m, wings 3 m wide with angled tops</dd>
+        <dt>&nbsp;</dt><dd>Truss 16 m span at the back of the stage, bottom at 5.5 m</dd>
+      </dl>
+    </aside>
+  </div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+
+
+const GLB_URL = "dkt-stage.glb";
+const BEAMS = [{"x": -7.781581878662109, "y": 3.0, "z": 2.897839069366455, "tilt": -0.15707963705062866, "len": 3.5999999046325684}, {"x": -4.6693949699401855, "y": 3.0, "z": 2.9120116233825684, "tilt": -0.09424778074026108, "len": 3.599999189376831}, {"x": -1.5565394163131714, "y": 3.0, "z": 2.919111728668213, "tilt": -0.03141592815518379, "len": 3.599999189376831}, {"x": 1.5565394163131714, "y": 3.0, "z": 2.919111728668213, "tilt": 0.03141592815518379, "len": 3.599999189376831}, {"x": 4.6693949699401855, "y": 3.0, "z": 2.9120116233825684, "tilt": 0.09424778074026108, "len": 3.599999189376831}, {"x": 7.781581878662109, "y": 3.0, "z": 2.897839069366455, "tilt": 0.15707963705062866, "len": 3.5999999046325684}];
+
+const canvas = document.getElementById('c'), vp = document.getElementById('vp');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x2c2c30);
+const camera = new THREE.PerspectiveCamera(14, 16/9, 0.5, 600);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.maxDistance = 160; controls.minDistance = 2;
+
+scene.add(new THREE.HemisphereLight(0xf2f4ff, 0x40404a, 1.6));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-6, 14, 14); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.6); rim.position.set(12, 8, -10); scene.add(rim);
+
+// Blender (x, y, z) -> three (x, z, -y)
+const B = (x, y, z) => new THREE.Vector3(x, z, -y);
+const VIEWS = {
+  front:{dir:[0,0.04,1],  target:B(0,2.0,3.0), halfW:11.8, halfH:3.4, label:'FRONT', fov:14},
+  top:  {dir:[0,1,0.0001],target:B(0,-1.0,0), halfW:12.5, halfH:7.4, label:'TOP · plan', fov:14},
+  side: {dir:[1,0.04,0],  target:B(0,-1.2,3.0),halfW:9.6,  halfH:3.6, label:'SIDE · from stage left', fov:14},
+  free: {dir:[-0.55,0.38,0.75],target:B(0,0.5,2.0),halfW:11, halfH:5.5, label:'3D · drag to rotate', fov:35}
+};
+function pose(v){
+  const p = VIEWS[v], t = Math.tan(THREE.MathUtils.degToRad(p.fov/2));
+  const d = Math.max(p.halfH/t, p.halfW/(t*camera.aspect)) * 1.08;
+  const dir = new THREE.Vector3(...p.dir).normalize();
+  return {pos:p.target.clone().addScaledVector(dir, d), target:p.target.clone(), fov:p.fov};
+}
+let anim = null;
+function go(v, instant){
+  const to = pose(v), from = {pos:camera.position.clone(), target:controls.target.clone(), fov:camera.fov};
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (instant || reduce){ camera.position.copy(to.pos); controls.target.copy(to.target); camera.fov=to.fov; camera.updateProjectionMatrix(); controls.update(); anim=null; return; }
+  anim = {from, to, t0:performance.now(), dur:700};
+}
+
+// UI: switch
+const views=['front','top','side','free'];
+const btns=[...document.querySelectorAll('.switch button')], thumb=document.querySelector('.thumb'), tag=document.getElementById('tag');
+let cur='front';
+function place(){const b=document.getElementById('btn-'+cur);thumb.style.left=b.offsetLeft+'px';thumb.style.width=b.offsetWidth+'px';}
+function show(v, push, instant){
+  if(!VIEWS[v]) v='front'; cur=v;
+  btns.forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.view===v)));
+  tag.textContent = VIEWS[v].label; place(); go(v, instant);
+  if(push && location.hash!=='#'+v){ try{history.replaceState(null,'','#'+v);}catch(e){} }
+}
+btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.view,true)));
+document.addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='4') show(views[+e.key-1],true);
+});
+window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));
+controls.addEventListener('start',()=>{ anim=null; if(cur!=='free'){ cur='free'; btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view==='free'))); tag.textContent=VIEWS.free.label; place(); }});
+
+function resize(){
+  const w=vp.clientWidth, h=vp.clientHeight; renderer.setSize(w,h,false);
+  camera.aspect=w/h; camera.updateProjectionMatrix(); place();
+}
+new ResizeObserver(resize).observe(vp); resize();
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(place);
+
+// Model
+new GLTFLoader().load(GLB_URL, gltf=>{
+  gltf.scene.traverse(o=>{
+    if(!o.isMesh) return;
+    const m=o.material;
+    if(m.emissiveMap){ m.emissiveIntensity = 1.1; }
+    if(/Lens/.test(m.name)) m.emissiveIntensity = 3;
+  });
+  scene.add(gltf.scene);
+  const beamMat = new THREE.MeshBasicMaterial({color:0xbfd4ff, transparent:true, opacity:0.18, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide});
+  BEAMS.forEach(b=>{
+    const g = new THREE.CylinderGeometry(0.16, 0.04, b.len, 20, 1, true);
+    const m = new THREE.Mesh(g, beamMat); m.position.copy(B(b.x,b.y,b.z)); m.rotation.z = -b.tilt; scene.add(m);
+  });
+  document.getElementById('loading').remove();
+}, undefined, err=>{ document.getElementById('loading').textContent='The 3D model could not load. Reload the page to try again.'; console.error(err); });
+
+show(location.hash.slice(1)||'front', false, true);
+(function loop(now){
+  requestAnimationFrame(loop);
+  if(anim){
+    const k=Math.min(1,(now-anim.t0)/anim.dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    camera.position.lerpVectors(anim.from.pos, anim.to.pos, e);
+    controls.target.lerpVectors(anim.from.target, anim.to.target, e);
+    camera.fov = anim.from.fov + (anim.to.fov-anim.from.fov)*e; camera.updateProjectionMatrix();
+    if(k>=1) anim=null;
+  }
+  controls.update(); renderer.render(scene, camera);
+})(performance.now());
+</script>
+
+</body>
+</html>

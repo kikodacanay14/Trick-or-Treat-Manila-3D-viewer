@@ -13,3 +13,6 @@ no-status-or-count-without-fresh-read rule. Source: task-observer findings 0023,
 - Before stating facts or claiming anything is done, use these skills (Kiko, 17 Nov 2026):
   `superpowers:verification-before-completion`, `agent-protocols:source-driven-development`,
   `caveman:investigate-first` and `verify-before-done`.
+- Matt Pocock skills (Kiko, 17 Nov 2026: "and matt pockok skills"), adapted from github.com/mattpocock/skills:
+  `grill-me` to stress-test a plan or decision before acting on it, `improve-codebase-architecture` when reviewing a
+  repo's architecture, and `setup-matt-pocock-skills` once per repo before the other two.

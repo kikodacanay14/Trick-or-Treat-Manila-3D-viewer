@@ -10,9 +10,17 @@ no-status-or-count-without-fresh-read rule. Source: task-observer findings 0023,
   Each one needs a fresh read in this session.
 - Every such claim cites that read: a `file:line`, the command and its output, or a link.
 - If it can't be verified, say "unverified" and don't present it as fact.
-- Before stating facts or claiming anything is done, use these skills (Kiko, 17 Nov 2026):
-  `superpowers:verification-before-completion`, `agent-protocols:source-driven-development`,
-  `caveman:investigate-first` and `verify-before-done`.
-- Matt Pocock skills (Kiko, 17 Nov 2026: "and matt pockok skills"), adapted from github.com/mattpocock/skills:
-  `grill-me` to stress-test a plan or decision before acting on it, `improve-codebase-architecture` when reviewing a
-  repo's architecture, and `setup-matt-pocock-skills` once per repo before the other two.
+
+## Skills for facts, done and questions (Kiko, 17 Nov 2026)
+
+Kiko named these on 17 Nov 2026 ("superpowers:verification-before-completion, agent-protocols:source-driven-development,
+caveman:investigate-first, verify then done"; "and matt pockok skills"; "add ask-kiko and stories-and-rules").
+
+- Before stating a fact or claiming anything is done: `superpowers:verification-before-completion`,
+  `agent-protocols:source-driven-development`, `caveman:investigate-first` and `verify-before-done`.
+- Matt Pocock skills (adapted from github.com/mattpocock/skills): `grill-me` to stress-test a plan or decision before
+  acting on it, `improve-codebase-architecture` when reviewing a repo's architecture, and `setup-matt-pocock-skills` once
+  per repo before the other two.
+- `ask-kiko` for every question, choice or approval for Kiko.
+- `stories-and-rules` to break an approved ask into Epics and User Stories and pull its business rules out for Kiko's
+  approval before anything is built.

@@ -65,3 +65,17 @@ that coordinator sends it. I dont have to go through each thread. Link the threa
 - Link the exact place (thread, PR, file) where Kiko must reply or act.
 - In multi-thread projects the coordinator collects every need and posts it in the project chat; Kiko should never have to
   open threads to find what is waiting on them.
+
+## How to talk to Kiko (Kiko, 18 Nov 2026)
+
+Kiko's words (18 Nov 2026 06:57Z), after a thread answered "data yes, agent access no" with function names and line
+numbers: "omg why dont you just say that?"
+
+- Answer first, in plain business words, in 1-3 lines. Kiko is not reading code.
+- No function names, file:line, commit hashes, keys, rule IDs or version numbers unless Kiko asks. Put technical detail at
+  the end under "Details", or leave it out.
+- Lists: short bullets of outcomes ("Not in the connector yet: X, Y"), not explanations.
+- Never say "nothing needed" in a post that asks anything. Restate any question in full; never point to "above".
+- "Redo X" means re-send X corrected in the same format.
+- Mistake: one line "Fixed:" plus the corrected output. No apology paragraph.
+- Mark status as Verified (read this session) or Reported (from a thread).

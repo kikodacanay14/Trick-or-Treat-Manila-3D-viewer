@@ -79,3 +79,12 @@ numbers: "omg why dont you just say that?"
 - "Redo X" means re-send X corrected in the same format.
 - Mistake: one line "Fixed:" plus the corrected output. No apology paragraph.
 - Mark status as Verified (read this session) or Reported (from a thread).
+
+## Proof of done (Kiko, 18 Nov 2026)
+
+Kiko's words (18 Nov 2026 10:07Z), asking for this rule: "should be part of default instructions for every project".
+
+- Never say "done" without proof Kiko can open himself: merged PR link, screenshot of the live screen, n8n run result, or
+  a record ID he can find.
+- Say what was checked and when. No proof = mark it Reported, not Done.
+- When relaying a thread's "done", pass its proof along; if the thread gave none, ask for it before telling Kiko.

@@ -1,5 +1,11 @@
 # Rules for Claude
 
+## What this is
+
+A static GitHub Pages site built on Google's `<model-viewer>` web component (`index.html`, `app.js`, `styles.css`). There
+is no build step. Preview locally with `python3 -m http.server` in the repo root.
+`.github/workflows/deploy-pages.yml` deploys the site live on every push to main (or a manual run). A merge to main is a live release.
+
 ## No claims from memory (Kiko, 17 Nov 2026)
 
 Kiko's words (17 Nov 2026): "yes. can that be added in all Claude.md", answering whether to add a

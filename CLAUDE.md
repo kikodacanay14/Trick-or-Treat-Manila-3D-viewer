@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # Rules for Claude
 
 ## What this is

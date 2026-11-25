@@ -11,14 +11,19 @@ wins.
 
 Where things live:
 
-- **Delivery Board** (formerly the Feature Board): https://claude.ai/artifact/VDVXsxnpX36S91w8PXEauP. Cards (collection
-  `features`), the Decisions tab (`decisions`) and project release details (`projects`).
+- **Delivery Board** (formerly the Feature Board): its data is in Kiko's private Google Sheet "Decisions Log - Main",
+  reached through the Canvas connector's board tools (the "delivery-board" entry) with a per-app board key. How to reach
+  it, keys, what to log in which tab, its rules and the board steps after a release:
+  https://github.com/kikodacanay14/CanvasWorkspace/blob/main/docs/delivery-board.md (Kiko approved, 25 Nov 2026 18:40Z).
+  The old board page https://claude.ai/artifact/VDVXsxnpX36S91w8PXEauP is history only, except release number claims
+  (its `slots` collection).
 - **BSE Apps & Systems shared Drive**: https://drive.google.com/drive/u/0/folders/0AE_qEZv4inXlUk9PVA. One folder per app:
   `00 — System Index`, `01 — Shared Standards`, `02 — Canvas`, `03 — Cue`, `04 — Chase`, `05 — Charter`,
   `06 — Concord`, `07 — MCP`, `08 — n8n`. Each app folder holds its Application QA File. Use the same folder names on
   every computer: Google Drive for desktop on KKD and the Mac, synced to this shared Drive. Never keep app files in a personal or ad hoc folder.
 - **Concord** (`concord-handover` connector): approvals, questions, bugs and messages between chats.
-- **Delivery Board from chats on Kiko's PC** (Kiko, 25 Nov 2026, rules B1 to B6): Claude Desktop, Claude Code and Codex on
+- **Delivery Board from chats on Kiko's PC** (Kiko, 25 Nov 2026, rules B1 to B6), only until the app has the
+  delivery-board entry: Claude Desktop, Claude Code and Codex on
   the PC cannot open the board itself. Use the `concord-handover` tools instead. `read_board` reads Concord's hourly copy
   (check its `syncedAt`). `request_board_update` (request_id, from_chat, card_id or `new`, changes) queues a change and
   answers "Queued", never "Done". The hourly run at minute 7 applies it and replies "Applied" or "Refused" through

@@ -15,7 +15,7 @@ Where things live:
   `features`), the Decisions tab (`decisions`) and project release details (`projects`).
 - **BSE Apps & Systems shared Drive**: https://drive.google.com/drive/u/0/folders/0AE_qEZv4inXlUk9PVA. One folder per app:
   `00 — System Index`, `01 — Shared Standards`, `02 — Canvas`, `03 — Cue`, `04 — Chase`, `05 — Charter`,
-  `06 - Concord`, `07 - MCP`, `08 - n8n`. Each app folder holds its Application QA File. Use the same folder names on
+  `06 — Concord`, `07 — MCP`, `08 — n8n`. Each app folder holds its Application QA File. Use the same folder names on
   every computer: Google Drive for desktop on KKD and the Mac, synced to this shared Drive. Never keep app files in a personal or ad hoc folder.
 - **Concord** (`concord-handover` connector): approvals, questions, bugs and messages between chats.
 - **`HANDOVER.md`** (https://github.com/kikodacanay14/bse-apps/blob/main/HANDOVER.md): what the next chat must know ("Handover rules").
